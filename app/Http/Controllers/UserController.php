@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Konsumen;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +13,11 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'username' => 'required|unique:tb_user',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            'nama_lengkap' => 'required',
+            'alamat' => 'required',
+            'no_hp' => 'required',
+            'email' => 'required|unique::tb_konsumen'
         ]);
 
         $username = $request->input('username');
@@ -32,13 +37,32 @@ class UserController extends Controller
                 'password' => $password
             ]);
 
-            if ($user){
-                return response()->json([
-                    'code' => 200,
-                    'status' => "Success",
-                    'message' => 'SUCCESS',
-                    'result' => ''
-                ], 200);
+            if ($user) {
+
+                $konsumen = Konsumen::create([
+                    'user_id' => $user->id,
+                    'nama_lengkap' => $request->nama_lengkap,
+                    'alamat' => $request->alamat,
+                    'no_hp' => $request->no_hp,
+                    'email' => $request->email
+                ]);
+
+                if ($konsumen) {
+                    return response()->json([
+                        'code' => 200,
+                        'status' => "Success",
+                        'message' => 'SUCCESS',
+                        'result' => ''
+                    ], 200);
+                }
+                else {
+                    return response()->json([
+                        'code' => 200,
+                        'status' => "Failed",
+                        'message' => 'FAILED',
+                        'result' => ''
+                    ], 500);
+                }
             }
             else {
                 return response()->json([

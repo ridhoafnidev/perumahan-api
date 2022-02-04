@@ -38,7 +38,6 @@ class UserController extends Controller
             ]);
 
             if ($user) {
-
                 $konsumen = Konsumen::create([
                     'user_id' => $user->id,
                     'nama_lengkap' => $request->nama_lengkap,

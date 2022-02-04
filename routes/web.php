@@ -29,6 +29,6 @@ $router->get('/tipe-rumah-by-id', 'TipeRumahController@getTipeRumahById');
 //endregion
 //region CalonPemilik
 
-//TODO
+$router->get('/calon-pemilik-all', 'CalonPemilikController@getCalonPemilikAll');
 
 //endregion

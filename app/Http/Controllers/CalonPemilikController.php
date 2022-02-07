@@ -3,17 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\CalonPemilik;
+use App\Models\Konsumen;
+use App\Models\MasterPerumahan;
 use Illuminate\Http\Request;
 
 class CalonPemilikController extends Controller
 {
     public function getCalonPemilikAll() {
         $listCalonPemilik = CalonPemilik::all()->sortByDesc('id');
+        $data = [];
+
+        foreach ($listCalonPemilik as $calonPemilik) {
+            $konsumen = Konsumen::find($calonPemilik->konsumen_id);
+            $calonPemilikItem['id'] = $calonPemilik->id;
+            $calonPemilikItem['nama'] = $konsumen->nama_lengkap;
+            $calonPemilikItem['alamat'] = $konsumen->alamat;
+            $calonPemilikItem['tipe_rumah'] = MasterPerumahan::find($calonPemilik->rumah_id)->nama_perumahan;
+            switch ($calonPemilik->status_pengajuan) {
+                case 2:
+                    $calonPemilikItem['status_pengajuan'] = 'Sudah Dihubungi';
+                    break;
+                case 3:
+                    $calonPemilikItem['status_pengajuan'] = 'Diterima';
+                    break;
+                default:
+                    $calonPemilikItem['status_pengajuan'] = 'Belum Dihubungi';
+            }
+            $data[] = $calonPemilikItem;
+        }
+
         return response()->json([
             'code' => 200,
             'status' => "Success",
             'message' => "SUCCESS",
-            'result' => $listCalonPemilik
+            'result' => $data
         ]);
     }
 

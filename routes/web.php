@@ -19,7 +19,7 @@ $router->post('/login', 'UserController@login');
 //region Tipe Rumah
 
 $router->get('/tipe-rumah-all', 'TipeRumahController@getTipeRumahAll');
-$router->get('/tipe-rumah-by-id', 'TipeRumahController@getTipeRumahById');
+$router->get('/tipe-rumah/{id}', 'TipeRumahController@getTipeRumahById');
 
 //endregion
 //region User

@@ -30,6 +30,7 @@ $router->get('/tipe-rumah/{id}', 'TipeRumahController@getTipeRumahById');
 //region CalonPemilik
 
 $router->post('/calon-pemilik', 'CalonPemilikController@insertCalonPemilik');
+$router->get('/calon-pemilik/{id}', 'CalonPemilikController@getCalonPemilik');
 $router->get('/calon-pemilik-all', 'CalonPemilikController@getCalonPemilikAll');
 $router->patch('/update-status-calon-pemilik/{id}', 'CalonPemilikController@updateStatusCalonPemilik');
 

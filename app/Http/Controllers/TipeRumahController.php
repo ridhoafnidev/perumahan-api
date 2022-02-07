@@ -23,8 +23,6 @@ class TipeRumahController extends Controller
             $arrayTipeRumah['plafon'] = $item['plafon'];
             $arrayTipeRumah['pintu_depan'] = $item['pintu_depan'];
             $arrayTipeRumah['dinding_km'] = $item['dinding_km'];
-            $arrayTipeRumah['pintu_depan'] = $item['pintu_depan'];
-            $arrayTipeRumah['dinding_km'] = $item['dinding_km'];
             $arrayTipeRumah['kusen'] = $item['kusen'];
             $arrayTipeRumah['r_atap'] = $item['r_atap'];
             $arrayTipeRumah['p_atap'] = $item['p_atap'];
@@ -36,7 +34,7 @@ class TipeRumahController extends Controller
             $arrayTipeRumah['perumahan_id'] = $item['perumahan_id'];
             $arrayTipeRumah['perumahan'] = $this->getPerumahansById($item['perumahan_id']);
             $arrayTipeRumah['foto'] = $this->getFotosById($item['id']);
-            array_push($data, $arrayTipeRumah);
+            $data[] = $arrayTipeRumah;
         }
 
         return response()->json([
@@ -51,12 +49,11 @@ class TipeRumahController extends Controller
     //region ambil data tipe rumah by id
 
     public function getTipeRumahById($id) {
-        $tipeRumahById = TipePerumahan::find($id);
-        return respons()->json([
+        return response()->json([
             'code' => 200,
             'status' => "Success",
             'message' => "Success",
-            'result' => $tipeRumahById
+            'result' => TipePerumahan::find($id)
         ]);
     }
 

@@ -49,11 +49,22 @@ class TipeRumahController extends Controller
     //region ambil data tipe rumah by id
 
     public function getTipeRumahById($id) {
+        $detailTipeRumah = TipePerumahan::find($id);
+        if (!$detailTipeRumah) {
+            return response()->json([
+                'code' => 404,
+                'status' => "Not Found",
+                'message' => 'Detail Calon pemilik tidak ditemukan!',
+                'result' => ''
+            ], 404);
+        }
+        $detailTipeRumah['perumahan'] = $this->getPerumahansById($detailTipeRumah->id);
+        $detailTipeRumah['foto'] = $this->getFotosById($detailTipeRumah->id);
         return response()->json([
             'code' => 200,
             'status' => "Success",
             'message' => "Success",
-            'result' => TipePerumahan::find($id)
+            'result' => $detailTipeRumah
         ]);
     }
 

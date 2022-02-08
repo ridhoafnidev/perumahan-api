@@ -47,11 +47,22 @@ class CalonPemilikController extends Controller
 
         if (!$detailCalonPemilik) {
             return response()->json([
-                'code' => 500,
-                'status' => "Failed",
+                'code' => 404,
+                'status' => "Not Found",
                 'message' => 'Detail Calon pemilik tidak ditemukan!',
                 'result' => ''
-            ], 500);
+            ], 404);
+        }
+
+        switch ($detailCalonPemilik->status_pengajuan) {
+            case 2:
+                $detailCalonPemilik['status_pengajuan'] = 'Sudah Dihubungi';
+                break;
+            case 3:
+                $detailCalonPemilik['status_pengajuan'] = 'Diterima';
+                break;
+            default:
+                $detailCalonPemilik['status_pengajuan'] = 'Belum Dihubungi';
         }
 
         $konsumen = Konsumen::find($detailCalonPemilik->konsumen_id);

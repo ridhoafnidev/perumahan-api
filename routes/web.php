@@ -24,7 +24,7 @@ $router->get('/tipe-rumah/{id}', 'TipeRumahController@getTipeRumahById');
 //endregion
 //region User
 
-//TODO
+
 
 //endregion
 //region CalonPemilik
@@ -35,3 +35,5 @@ $router->get('/calon-pemilik-all', 'CalonPemilikController@getCalonPemilikAll');
 $router->patch('/update-status-calon-pemilik/{id}', 'CalonPemilikController@updateStatusCalonPemilik');
 
 //endregion
+$router->get('/status-pengajuan-all', 'StatusPengajuanController@getStatusPengajuanAll');
+$router->get('/status-pengajuan/{id}', 'StatusPengajuanController@getStatusPengajuanById');

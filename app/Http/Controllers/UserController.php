@@ -17,7 +17,8 @@ class UserController extends Controller
             'nama_lengkap' => 'required',
             'alamat' => 'required',
             'no_hp' => 'required',
-            'email' => 'required|unique::tb_konsumen'
+            'email' => 'required|email|unique:tb_konsumen',
+            'role' => 'required'
         ]);
 
         $username = $request->input('username');
@@ -25,16 +26,17 @@ class UserController extends Controller
 
         if ($this->checkUsername($username) == 1) {
             return response()->json([
-                'code' => 200,
+                'code' => 400,
                 'status' => "Failed",
                 'message' => 'Username sudah ada!',
                 'result' => ''
-            ], 500);
+            ], 400);
         }
         else {
             $user = User::create([
                 'username' => $username,
-                'password' => $password
+                'password' => $password,
+                'role' => $request->role
             ]);
 
             if ($user) {
@@ -85,28 +87,32 @@ class UserController extends Controller
 
         $user = User::where('username', $username)->first();
         $role = $user->role;
+
         if ($role == "direktur"){
             $dataUser = User::join('tb_direktur', 'tb_user.id', '=', 'tb_direktur.user_id')
                 ->where('tb_user.username', $username)
                 ->where('tb_user.role', 'direktur')
-                ->get(['tb_user.*', 'tb_direktur.*', 'tb_direktur.id as direktur_id']);
+                ->get(['tb_user.*', 'tb_direktur.*', 'tb_direktur.id as direktur_id'])
+                ->first();
         }
         elseif ($role == "konsumen") {
             $dataUser = User::join('tb_konsumen', 'tb_user.id', '=', 'tb_konsumen.user_id')
                 ->where('tb_user.username', $username)
                 ->where('tb_user.role', 'konsumen')
-                ->get(['tb_user.*', 'tb_konsumen.*', 'tb_konsumen.id as konsumen_id']);
+                ->get(['tb_user.*', 'tb_konsumen.*', 'tb_konsumen.id as konsumen_id'])
+                ->first();
         }
         elseif($role == "pegawai") {
             $dataUser = User::join('tb_pegawai', 'tb_user.id', '=', 'tb_pegawai.user_id')
                 ->where('tb_user.username', $username)
                 ->where('tb_user.role', 'pegawai')
-                ->get(['tb_user.*', 'tb_pegawai.*', 'tb_pegawai.id as pegawai_id']);
+                ->get(['tb_user.*', 'tb_pegawai.*', 'tb_pegawai.id as pegawai_id'])
+                ->first();
         }
 
         if (!$user){
             return response()->json([
-                'code' => 200,
+                'code' => 500,
                 'status' => "Failed",
                 'message' => 'FAILED',
                 'result' => ''

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CalonPemilik;
 use App\Models\Konsumen;
 use App\Models\MasterPerumahan;
+use App\Models\StatusPengajuan;
 use App\Models\TipePerumahan;
 use Illuminate\Http\Request;
 
@@ -20,16 +21,7 @@ class CalonPemilikController extends Controller
             $calonPemilikItem['nama'] = $konsumen->nama_lengkap;
             $calonPemilikItem['alamat'] = $konsumen->alamat;
             $calonPemilikItem['tipe_rumah'] = MasterPerumahan::find($calonPemilik->rumah_id)->nama_perumahan;
-            switch ($calonPemilik->status_pengajuan) {
-                case 2:
-                    $calonPemilikItem['status_pengajuan'] = 'Sudah Dihubungi';
-                    break;
-                case 3:
-                    $calonPemilikItem['status_pengajuan'] = 'Diterima';
-                    break;
-                default:
-                    $calonPemilikItem['status_pengajuan'] = 'Belum Dihubungi';
-            }
+            $calonPemilikItem['status_pengajuan'] = StatusPengajuan::find($calonPemilik->status_pengajuan_id)->nama;
             $data[] = $calonPemilikItem;
         }
 
@@ -54,17 +46,6 @@ class CalonPemilikController extends Controller
             ], 404);
         }
 
-        switch ($detailCalonPemilik->status_pengajuan) {
-            case 2:
-                $detailCalonPemilik['status_pengajuan'] = 'Sudah Dihubungi';
-                break;
-            case 3:
-                $detailCalonPemilik['status_pengajuan'] = 'Diterima';
-                break;
-            default:
-                $detailCalonPemilik['status_pengajuan'] = 'Belum Dihubungi';
-        }
-
         $konsumen = Konsumen::find($detailCalonPemilik->konsumen_id);
 
         $detailCalonPemilik['konsumen_nama'] = $konsumen->nama_lengkap;
@@ -73,6 +54,7 @@ class CalonPemilikController extends Controller
         $detailCalonPemilik['konsumen_email'] = $konsumen->email;
         $detailCalonPemilik['perumahan'] = MasterPerumahan::find($detailCalonPemilik->rumah_id)->nama_perumahan;
         $detailCalonPemilik['tipe_rumah'] = TipePerumahan::find($detailCalonPemilik->tipe_perumahan_id)->nama_tipe;
+        $detailCalonPemilik['status_pengajuan'] = StatusPengajuan::find($detailCalonPemilik->status_pengajuan_id)->nama;
 
         return response()->json([
             'code' => 200,
@@ -100,7 +82,7 @@ class CalonPemilikController extends Controller
         $calonPemilik = CalonPemilik::create([
             'konsumen_id' => $request->konsumen_id,
             'rumah_id' => $request->rumah_id,
-            'status_pengajuan' => 1,
+            'status_pengajuan_id' => 1,
             'jumlah_dp' => $request->jumlah_dp,
             'bukti_transfer' => $namaBuktiDP
         ]);
@@ -124,14 +106,14 @@ class CalonPemilikController extends Controller
 
     public function updateStatusCalonPemilik(Request $request)
     {
-        $calonPemilik = CalonPemilik::find($request->id);
-
         $this->validate($request, [
-            'status_pengajuan' => 'required'
+            'status_pengajuan_id' => 'required'
         ]);
 
+        $calonPemilik = CalonPemilik::find($request->id);
+
         if ($calonPemilik) {
-            $calonPemilik->status_pengajuan = $request->status_pengajuan;
+            $calonPemilik->status_pengajuan_id = $request->status_pengajuan_id;
             $isSuccess = $calonPemilik->save();
 
             if ($isSuccess) {

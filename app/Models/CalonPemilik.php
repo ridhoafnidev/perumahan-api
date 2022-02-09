@@ -12,7 +12,7 @@ class CalonPemilik extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id', 'tipe_perumahan_id', 'konsumen_id', 'rumah_id', 'status_permohonan', 'jumlah_dp', 'bukti_transfer',
+        'id', 'tipe_perumahan_id', 'konsumen_id', 'rumah_id', 'status_pengajuan_id', 'jumlah_dp', 'bukti_transfer',
         'tanggal_pengajuan', 'tanggal_update_bukti_transfer'
     ];
 }

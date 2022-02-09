@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Direktur;
 use App\Models\Konsumen;
+use App\Models\Pegawai;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -33,37 +35,55 @@ class UserController extends Controller
             ], 400);
         }
         else {
+            $role = $request->role;
+
             $user = User::create([
                 'username' => $username,
                 'password' => $password,
-                'role' => $request->role
+                'role' => $role
             ]);
 
             if ($user) {
-                $konsumen = Konsumen::create([
-                    'user_id' => $user->id,
-                    'nama_lengkap' => $request->nama_lengkap,
-                    'alamat' => $request->alamat,
-                    'no_hp' => $request->no_hp,
-                    'email' => $request->email
-                ]);
+                $userId = $user->id;
+                $namaLengkap = $request->nama_lengkap;
+                $alamat = $request->alamat;
+                $noHp = $request->no_hp;
+                $email = $request->email;
 
-                if ($konsumen) {
-                    return response()->json([
-                        'code' => 200,
-                        'status' => "Success",
-                        'message' => 'SUCCESS',
-                        'result' => ''
-                    ], 200);
+                switch ($role) {
+                    case 'direktur':
+                        Direktur::create([
+                            'user_id' => $userId,
+                            'nama_lengkap' => $namaLengkap,
+                            'alamat' => $alamat,
+                            'no_hp' => $noHp,
+                            'email' => $email
+                        ]);
+                        break;
+                    case 'pegawai':
+                        Pegawai::create([
+                            'user_id' => $userId,
+                            'nama_lengkap' => $namaLengkap,
+                            'alamat' => $alamat,
+                            'no_hp' => $noHp,
+                            'email' => $email
+                        ]);
+                        break;
+                    default:
+                        Konsumen::create([
+                            'user_id' => $userId,
+                            'nama_lengkap' => $namaLengkap,
+                            'alamat' => $alamat,
+                            'no_hp' => $noHp,
+                            'email' => $email
+                        ]);
                 }
-                else {
-                    return response()->json([
-                        'code' => 200,
-                        'status' => "Failed",
-                        'message' => 'FAILED',
-                        'result' => ''
-                    ], 500);
-                }
+                return response()->json([
+                    'code' => 200,
+                    'status' => "Success",
+                    'message' => 'SUCCESS',
+                    'result' => ''
+                ]);
             }
             else {
                 return response()->json([

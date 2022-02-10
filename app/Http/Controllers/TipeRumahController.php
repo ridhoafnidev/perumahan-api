@@ -32,7 +32,7 @@ class TipeRumahController extends Controller
             $arrayTipeRumah['harga'] = $item['harga'];
             $arrayTipeRumah['jumlah_unit'] = $item['jumlah_unit'];
             $arrayTipeRumah['perumahan_id'] = $item['perumahan_id'];
-            $arrayTipeRumah['perumahan'] = $this->getPerumahansById($item['perumahan_id']);
+            $arrayTipeRumah['perumahan'] = $this->getPerumahansById($item['id']);
             $arrayTipeRumah['foto'] = $this->getFotosById($item['id']);
             $data[] = $arrayTipeRumah;
         }
@@ -58,8 +58,8 @@ class TipeRumahController extends Controller
                 'result' => ''
             ], 404);
         }
-        $detailTipeRumah['perumahan'] = $this->getPerumahansById($detailTipeRumah->id);
-        $detailTipeRumah['foto'] = $this->getFotosById($detailTipeRumah->id);
+        $detailTipeRumah['perumahan'] = $this->getPerumahansById($id);
+        $detailTipeRumah['foto'] = $this->getFotosById($id);
         return response()->json([
             'code' => 200,
             'status' => "Success",
@@ -78,7 +78,7 @@ class TipeRumahController extends Controller
 
     private function getPerumahansById($perumahan_id)
     {
-        return MasterPerumahan::where('id', $perumahan_id)->get();
+        return MasterPerumahan::where('tipe_perumahan_id', $perumahan_id)->get();
     }
 
     //endregion

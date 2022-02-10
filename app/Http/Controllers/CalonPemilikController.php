@@ -20,7 +20,7 @@ class CalonPemilikController extends Controller
             $calonPemilikItem['id'] = $calonPemilik->id;
             $calonPemilikItem['nama'] = $konsumen->nama_lengkap;
             $calonPemilikItem['alamat'] = $konsumen->alamat;
-            $calonPemilikItem['tipe_rumah'] = MasterPerumahan::find($calonPemilik->rumah_id)->nama_perumahan;
+            $calonPemilikItem['tipe_rumah'] = TipePerumahan::find($calonPemilik->tipe_perumahan_id)->nama_tipe;
             $calonPemilikItem['status_pengajuan'] = StatusPengajuan::find($calonPemilik->status_pengajuan_id)->nama;
             $data[] = $calonPemilikItem;
         }
@@ -68,7 +68,7 @@ class CalonPemilikController extends Controller
     {
         $this->validate($request, [
             'konsumen_id' => 'required',
-            'rumah_id' => 'required',
+            'tipe_rumah_id' => 'required',
             'jumlah_dp' => 'required',
             'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);

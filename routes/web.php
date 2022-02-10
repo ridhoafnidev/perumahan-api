@@ -21,6 +21,8 @@ $router->post('/login', 'UserController@login');
 $router->get('/tipe-rumah-all', 'TipeRumahController@getTipeRumahAll');
 $router->get('/tipe-rumah/{id}', 'TipeRumahController@getTipeRumahById');
 
+$router->get('/perumahan/{tipePerumahanId}', 'PerumahanController@getPerumahanById');
+
 //endregion
 //region User
 

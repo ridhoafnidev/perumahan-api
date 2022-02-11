@@ -68,7 +68,8 @@ class CalonPemilikController extends Controller
     {
         $this->validate($request, [
             'konsumen_id' => 'required',
-            'tipe_rumah_id' => 'required',
+            'tipe_perumahan_id' => 'required',
+            'rumah_id' => 'required',
             'jumlah_dp' => 'required',
             'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
@@ -81,6 +82,7 @@ class CalonPemilikController extends Controller
 
         $calonPemilik = CalonPemilik::create([
             'konsumen_id' => $request->konsumen_id,
+            'tipe_perumahan_id' => $request->tipe_perumahan_id,
             'rumah_id' => $request->rumah_id,
             'status_pengajuan_id' => 1,
             'jumlah_dp' => $request->jumlah_dp,

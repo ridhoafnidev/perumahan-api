@@ -13,24 +13,12 @@ class CalonPemilikController extends Controller
 {
     public function getCalonPemilikAll() {
         $listCalonPemilik = CalonPemilik::all()->sortByDesc('id');
-        $data = [];
+        return $this->convertCalonPemilikToResponse($listCalonPemilik);
+    }
 
-        foreach ($listCalonPemilik as $calonPemilik) {
-            $konsumen = Konsumen::find($calonPemilik->konsumen_id);
-            $calonPemilikItem['id'] = $calonPemilik->id;
-            $calonPemilikItem['nama'] = $konsumen->nama_lengkap;
-            $calonPemilikItem['alamat'] = $konsumen->alamat;
-            $calonPemilikItem['tipe_rumah'] = TipePerumahan::find($calonPemilik->tipe_perumahan_id)->nama_tipe;
-            $calonPemilikItem['status_pengajuan'] = StatusPengajuan::find($calonPemilik->status_pengajuan_id)->nama;
-            $data[] = $calonPemilikItem;
-        }
-
-        return response()->json([
-            'code' => 200,
-            'status' => "Success",
-            'message' => "SUCCESS",
-            'result' => $data
-        ]);
+    public function getCalonPemilikAllById($id) {
+        $listCalonPemilik = CalonPemilik::all()->where('konsumen_id', '=', $id)->sortByDesc('id');
+        return $this->convertCalonPemilikToResponse($listCalonPemilik);
     }
 
     public function getCalonPemilik($id)
@@ -141,5 +129,31 @@ class CalonPemilikController extends Controller
                 'result' => ''
             ], 404);
         }
+    }
+
+    /**
+     * @param $listCalonPemilik
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function convertCalonPemilikToResponse($listCalonPemilik): \Illuminate\Http\JsonResponse
+    {
+        $data = [];
+
+        foreach ($listCalonPemilik as $calonPemilik) {
+            $konsumen = Konsumen::find($calonPemilik->konsumen_id);
+            $calonPemilikItem['id'] = $calonPemilik->id;
+            $calonPemilikItem['nama'] = $konsumen->nama_lengkap;
+            $calonPemilikItem['alamat'] = $konsumen->alamat;
+            $calonPemilikItem['tipe_rumah'] = TipePerumahan::find($calonPemilik->tipe_perumahan_id)->nama_tipe;
+            $calonPemilikItem['status_pengajuan'] = StatusPengajuan::find($calonPemilik->status_pengajuan_id)->nama;
+            $data[] = $calonPemilikItem;
+        }
+
+        return response()->json([
+            'code' => 200,
+            'status' => "Success",
+            'message' => "SUCCESS",
+            'result' => $data
+        ]);
     }
 }

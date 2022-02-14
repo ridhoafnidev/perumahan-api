@@ -33,6 +33,7 @@ $router->get('/perumahan/{tipePerumahanId}', 'PerumahanController@getPerumahanBy
 
 $router->post('/calon-pemilik', 'CalonPemilikController@insertCalonPemilik');
 $router->get('/calon-pemilik/{id}', 'CalonPemilikController@getCalonPemilik');
+$router->get('/calon-pemilik/{start}/{end}', 'CalonPemilikController@getCalonPemilikAllByRangeDate');
 $router->get('/calon-pemilik-all', 'CalonPemilikController@getCalonPemilikAll');
 $router->get('/calon-pemilik-all/{id}', 'CalonPemilikController@getCalonPemilikAllById');
 $router->patch('/update-status-calon-pemilik/{id}', 'CalonPemilikController@updateStatusCalonPemilik');

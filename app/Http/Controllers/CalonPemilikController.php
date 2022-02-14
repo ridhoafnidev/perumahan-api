@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\CalonPemilik;
 use App\Models\Konsumen;
 use App\Models\MasterPerumahan;
+use App\Models\Perumahan;
 use App\Models\StatusPengajuan;
 use App\Models\TipePerumahan;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CalonPemilikController extends Controller
@@ -131,11 +133,38 @@ class CalonPemilikController extends Controller
         }
     }
 
+    public function getCalonPemilikAllByRangeDate($start, $end)
+    {
+        $listCalonPemilik = CalonPemilik::all()
+            ->sortByDesc('id')
+            ->whereBetween('tanggal_pengajuan', [$start, $end]);
+        $data = [];
+
+        foreach ($listCalonPemilik as $calonPemilik) {
+            $konsumen = Konsumen::find($calonPemilik->konsumen_id);
+            $calonPemilikItem['id'] = $calonPemilik->id;
+            $calonPemilikItem['nama'] = $konsumen->nama_lengkap;
+            $calonPemilikItem['alamat'] = $konsumen->alamat;
+            $calonPemilikItem['perumahan'] = Perumahan::find($calonPemilik->rumah_id)->nama_perumahan;
+            $calonPemilikItem['tipe_rumah'] = TipePerumahan::find($calonPemilik->tipe_perumahan_id)->nama_tipe;
+            $calonPemilikItem['status_pengajuan'] = StatusPengajuan::find($calonPemilik->status_pengajuan_id)->nama;
+            $calonPemilikItem['tanggal_pengajuan'] = $calonPemilik->tanggal_pengajuan;
+            $data[] = $calonPemilikItem;
+        }
+
+        return response()->json([
+            'code' => 200,
+            'status' => "Success",
+            'message' => "SUCCESS",
+            'result' => $data
+        ]);
+    }
+
     /**
      * @param $listCalonPemilik
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    private function convertCalonPemilikToResponse($listCalonPemilik): \Illuminate\Http\JsonResponse
+    private function convertCalonPemilikToResponse($listCalonPemilik): JsonResponse
     {
         $data = [];
 

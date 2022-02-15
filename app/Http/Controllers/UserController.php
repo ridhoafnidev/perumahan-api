@@ -106,6 +106,16 @@ class UserController extends Controller
         $password = $request->input('password');
 
         $user = User::where('username', $username)->first();
+
+        if ($user == null) {
+            return response()->json([
+                'code' => 404,
+                'status' => "Not Found",
+                'message' => 'User tidak ditemukan!',
+                'result' => ''
+            ], 404);
+        }
+
         $role = $user->role;
 
         if ($role == "direktur"){
@@ -143,7 +153,7 @@ class UserController extends Controller
 
         if (!$isValidPassword){
             return response()->json([
-                'code' => 200,
+                'code' => 500,
                 'status' => "Failed",
                 'message' => 'FAILED',
                 'result' => ''

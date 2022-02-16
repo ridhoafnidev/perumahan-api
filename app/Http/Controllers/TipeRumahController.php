@@ -23,8 +23,6 @@ class TipeRumahController extends Controller
             $arrayTipeRumah['plafon'] = $item['plafon'];
             $arrayTipeRumah['pintu_depan'] = $item['pintu_depan'];
             $arrayTipeRumah['dinding_km'] = $item['dinding_km'];
-            $arrayTipeRumah['pintu_depan'] = $item['pintu_depan'];
-            $arrayTipeRumah['dinding_km'] = $item['dinding_km'];
             $arrayTipeRumah['kusen'] = $item['kusen'];
             $arrayTipeRumah['r_atap'] = $item['r_atap'];
             $arrayTipeRumah['p_atap'] = $item['p_atap'];
@@ -34,9 +32,9 @@ class TipeRumahController extends Controller
             $arrayTipeRumah['harga'] = $item['harga'];
             $arrayTipeRumah['jumlah_unit'] = $item['jumlah_unit'];
             $arrayTipeRumah['perumahan_id'] = $item['perumahan_id'];
-            $arrayTipeRumah['perumahan'] = $this->getPerumahansById($item['perumahan_id']);
+            $arrayTipeRumah['perumahan'] = $this->getPerumahansById($item['id']);
             $arrayTipeRumah['foto'] = $this->getFotosById($item['id']);
-            array_push($data, $arrayTipeRumah);
+            $data[] = $arrayTipeRumah;
         }
 
         return response()->json([
@@ -51,12 +49,22 @@ class TipeRumahController extends Controller
     //region ambil data tipe rumah by id
 
     public function getTipeRumahById($id) {
-        $tipeRumahById = TipePerumahan::find($id);
-        return respons()->json([
+        $detailTipeRumah = TipePerumahan::find($id);
+        if (!$detailTipeRumah) {
+            return response()->json([
+                'code' => 404,
+                'status' => "Not Found",
+                'message' => 'Detail Calon pemilik tidak ditemukan!',
+                'result' => ''
+            ], 404);
+        }
+        $detailTipeRumah['perumahan'] = $this->getPerumahansById($id);
+        $detailTipeRumah['foto'] = $this->getFotosById($id);
+        return response()->json([
             'code' => 200,
             'status' => "Success",
             'message' => "Success",
-            'result' => $tipeRumahById
+            'result' => $detailTipeRumah
         ]);
     }
 
@@ -70,9 +78,18 @@ class TipeRumahController extends Controller
 
     private function getPerumahansById($perumahan_id)
     {
-        return MasterPerumahan::where('id', $perumahan_id)->get();
+        return MasterPerumahan::where('tipe_perumahan_id', $perumahan_id)->get();
     }
 
     //endregion
 
+    public function getTipeRumahOnly() {
+        $tipeRumah = TipePerumahan::all();
+        return response()->json([
+            'code' => 200,
+            'status' => "Success",
+            'message' => "SUCCESS",
+            'result' => $tipeRumah
+        ], 200);
+    }
 }

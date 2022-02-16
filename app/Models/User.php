@@ -15,6 +15,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     protected $table = "tb_user";
 
+    public $timestamps = false;
+
     protected $fillable = [
         'username', 'password', 'last_login', 'role'
     ];

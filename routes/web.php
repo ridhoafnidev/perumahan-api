@@ -19,16 +19,26 @@ $router->post('/login', 'UserController@login');
 //region Tipe Rumah
 
 $router->get('/tipe-rumah-all', 'TipeRumahController@getTipeRumahAll');
-$router->get('/tipe-rumah-by-id', 'TipeRumahController@getTipeRumahById');
+$router->get('/tipe-rumah-only', 'TipeRumahController@getTipeRumahOnly');
+$router->get('/tipe-rumah/{id}', 'TipeRumahController@getTipeRumahById');
+
+$router->get('/perumahan/{tipePerumahanId}', 'PerumahanController@getPerumahanById');
 
 //endregion
 //region User
 
-//TODO
+
 
 //endregion
 //region CalonPemilik
 
-//TODO
+$router->post('/calon-pemilik', 'CalonPemilikController@insertCalonPemilik');
+$router->get('/calon-pemilik/{id}', 'CalonPemilikController@getCalonPemilik');
+$router->get('/calon-pemilik/{start}/{end}', 'CalonPemilikController@getCalonPemilikAllByRangeDate');
+$router->get('/calon-pemilik-all', 'CalonPemilikController@getCalonPemilikAll');
+$router->get('/calon-pemilik-all/{id}', 'CalonPemilikController@getCalonPemilikAllById');
+$router->patch('/update-status-calon-pemilik/{id}', 'CalonPemilikController@updateStatusCalonPemilik');
 
 //endregion
+$router->get('/status-pengajuan-all', 'StatusPengajuanController@getStatusPengajuanAll');
+$router->get('/status-pengajuan/{id}', 'StatusPengajuanController@getStatusPengajuanById');

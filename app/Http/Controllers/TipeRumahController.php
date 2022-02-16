@@ -83,4 +83,13 @@ class TipeRumahController extends Controller
 
     //endregion
 
+    public function getTipeRumahOnly() {
+        $tipeRumah = TipePerumahan::all();
+        return response()->json([
+            'code' => 200,
+            'status' => "Success",
+            'message' => "SUCCESS",
+            'result' => $tipeRumah
+        ], 200);
+    }
 }

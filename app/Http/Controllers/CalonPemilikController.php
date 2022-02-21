@@ -61,14 +61,15 @@ class CalonPemilikController extends Controller
             'tipe_perumahan_id' => 'required',
             'rumah_id' => 'required',
             'jumlah_dp' => 'required',
-            'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'dokumen_pengajuan' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         $buktiDP = $request->file('bukti_transfer');
+        $dokumenPengajuan = $request->file('dokumen_pengajuan');
 
         $namaBuktiDP = time() . '_' . $buktiDP->getClientOriginalName();
-
-        $buktiDP->move('bukti transfer', $namaBuktiDP);
+        $namaDokumenPengajuan = time() . '_' . $dokumenPengajuan->getClientOriginalName();
 
         $calonPemilik = CalonPemilik::create([
             'konsumen_id' => $request->konsumen_id,
@@ -76,10 +77,15 @@ class CalonPemilikController extends Controller
             'rumah_id' => $request->rumah_id,
             'status_pengajuan_id' => 1,
             'jumlah_dp' => $request->jumlah_dp,
-            'bukti_transfer' => $namaBuktiDP
+            'bukti_transfer' => $namaBuktiDP,
+            'dokumen_pengajuan' => $namaDokumenPengajuan
         ]);
 
         if ($calonPemilik) {
+
+            $buktiDP->move('bukti transfer', $namaBuktiDP);
+            $dokumenPengajuan->move('dokumen pengajuan', $namaDokumenPengajuan);
+
             return response()->json([
                 'code' => 200,
                 'status' => "Success",
